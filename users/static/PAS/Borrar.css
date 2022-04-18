@@ -1,0 +1,20 @@
+div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 0 40px;
+    margin: auto
+}
+h1{
+    color: red;
+}
+button{
+    background-color:coral;
+    font-weight: 200;
+    font-size: large;
+    border-style: solid;
+}
+body{
+    background-color:blanchedalmond;
+}
