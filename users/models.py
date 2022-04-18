@@ -29,7 +29,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                                 default=OTHER)
     phone           = models.CharField(max_length=100)
     check_unity     = models.CharField(max_length=200, default="")
-    # status          = models.CharField(max_length=200, default="")
+    status          = models.BooleanField(max_length=200, default=False)
 
     date_joined     = models.DateTimeField(default=timezone.now)
     is_superuser    = models.BooleanField(default=False)

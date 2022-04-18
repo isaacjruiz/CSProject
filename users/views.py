@@ -48,7 +48,7 @@ def post_or_get(request):
                 print(DB_HASHED_PASSWORD)
 
             if hshpass == DB_HASHED_PASSWORD:
-                print("They match. Sending 200 status.")
+                print("They match. Sending 200 status.\n")
                 return HttpResponse(status=200)
             else:
                 return HttpResponse(status=406)
@@ -60,11 +60,14 @@ def post_or_get(request):
 
 def apis(response):
     list_of_dicts = list()
-    user_list = User.objects.all().values('username', 'is_active')
+    dict_with_list = dict()
+    user_list = User.objects.all().values('username', 'status')
 
     for object in user_list:
         list_of_dicts.append(object)
-    final = json.dumps(list_of_dicts)
+
+    dict_with_list["Users"] = list_of_dicts
+    final = json.dumps(dict_with_list)
     return HttpResponse(final, content_type="text/users.json")
 
 
