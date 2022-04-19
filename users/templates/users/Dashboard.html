@@ -1,48 +1,63 @@
-<!DOCTYPE html>
-<html lang="en">
-    <html>
-        <head>
-          <!--Load the AJAX API-->
-          <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-          <script type="text/javascript">
+<html>
+  <head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'PAS/Dashboard.css' %}">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart', 'geochart', 'scatter', 'table']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable({{values|safe}});
+        //Siempre se ven errores
+        var options = {
+          title: {{h_title|safe}} +' vs. '+ {{v_title|safe}},
+          hAxis: {title: {{h_title|safe}}},
+          vAxis: {title: {{v_title|safe}}},
+          legend: 'none'
+        };
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+
+        //Grafica 2
+        var data2 = google.visualization.arrayToDataTable({{values2|safe}});
+        var options2 = {
+          title: {{h_title2|safe}} +' vs. '+ {{v_title2|safe}},
+          hAxis: {title: {{h_title2|safe}}},
+          vAxis: {title: {{v_title2|safe}}},
+          legend: 'none'
+        };
+        var chart2 = new google.visualization.GeoChart(document.getElementById('regions_div'));
+        chart2.draw(data2, options2);
       
-            // Load the Visualization API and the corechart package.
-            google.charts.load('current', {'packages':['corechart']});
-      
-            // Set a callback to run when the Google Visualization API is loaded.
-            google.charts.setOnLoadCallback(drawChart);
-      
-            // Callback that creates and populates a data table,
-            // instantiates the pie chart, passes in the data and
-            // draws it.
-            function drawChart() {
-      
-              // Create the data table.
-              var data = new google.visualization.DataTable();
-              data.addColumn('string', 'Topping');
-              data.addColumn('number', 'Slices');
-              data.addRows([
-                ['Mushrooms', 3],
-                ['Onions', 1],
-                ['Olives', 1],
-                ['Zucchini', 1],
-                ['Pepperoni', 2]
-              ]);
-      
-              // Set chart options
-              var options = {'title':'How Much Pizza I Ate Last Night',
-                             'width':400,
-                             'height':300};
-      
-              // Instantiate and draw our chart, passing in some options.
-              var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-              chart.draw(data, options);
-            }
-          </script>
-        </head>
-      
-        <body>
-          <!--Div that will hold the pie chart-->
-          <div id="chart_div"></div>
-        </body>
-      </html>
+
+      //Grafica 3
+      var data3 = google.visualization.arrayToDataTable({{values3|safe}});
+        //Siempre se ven errores
+        var options3 = {
+          title: {{h_title3|safe}} +' vs. '+ {{v_title3|safe}},
+          hAxis: {title: {{h_title3|safe}}},
+          vAxis: {title: {{v_title3|safe}}},
+          legend: 'none'
+        };
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_div3'));
+        chart.draw(data3, options3);
+
+
+      }
+    </script>
+
+  </head>
+  <body>
+    <h1>Dashboard</h1>
+    <h2></h2>
+    <h3>Chart 1</h3>
+    <div id="chart_div" style="width: 800px; height: 500px;"></div>
+    <h2></h2>
+    <h3>Chart 2</h3>
+    <div id="regions_div" style="width: 800px; height: 500px;"></div>
+    <h2></h2>
+    <h3>Chart 3</h3>
+    <div id="chart_div3" style="width: 800px; height: 500px;"></div>
+  </body>
+</html>

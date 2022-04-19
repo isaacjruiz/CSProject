@@ -1,6 +1,9 @@
+from contextvars import Context
 from itertools import count
 import json
 from multiprocessing import context
+import string
+from tkinter import NONE
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views import generic
@@ -8,7 +11,7 @@ from django.http import HttpResponse
 from django.urls import reverse_lazy
 from .forms import CustomUserCreationForm
 from .models import Historial, User
-
+from random import randrange
 #Librerias para web
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
@@ -24,6 +27,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 from django.db.models import Count, Max, Min, Avg
 import hashlib as hb
+from json import dumps, loads
 # from django.contrib.auth.hashers import check_password, is_password_usable
 #Condigo de Unity
 def create_endpoint(user):
@@ -327,4 +331,76 @@ def apiss(response):
     return HttpResponse(final, content_type="text/users.json")
 
 def dashboard(request): #Tiene una estadistica de prueba
-    return render(request, 'users/dashboard.html' ,{})
+    #return HttpResponse(j, content_type="text/json-comment-filtered")
+    #Grafica 1
+    h_var = 'Points per game'
+    v_var = 'Time played'
+    data = [[h_var,v_var]]
+    # for i in range(0,11):
+    #     data.append([randrange(101),randrange(101)])
+    h_var_json = dumps(h_var)
+    v_var_json = dumps(v_var)
+    # datos_json = dumps(data)
+
+    mydb = sqlite3.connect("db.sqlite3")
+    cur = mydb.cursor()
+    stringSQL = '''SELECT Puntos_por_partida, Tiempo_jugado FROM users_Historial'''
+    rows = cur.execute(stringSQL)
+    listasalida = []
+    for i in rows:
+        d = {}
+        d['puntos'] = i[0]
+        d['tiempo'] = i[1]
+        data.append([i[0],i[1]]) #Necesita dos numeros
+    datos_json = dumps(data)
+    
+
+
+    #Grafica 2
+    h_var2 = '  Country'
+    v_var2 = 'Popularity'
+    data2 = [[h_var2,v_var2]]
+    # for i in range(0,11):
+    #     data.append([randrange(101),randrange(101)])
+    h_var_json2 = dumps(h_var2)
+    v_var_json2 = dumps(v_var2)
+    # datos_json = dumps(data)
+
+    mydb2 = sqlite3.connect("db.sqlite3")
+    cur2 = mydb2.cursor()
+    stringSQL2 = ''' SELECT DISTINCT country FROM users_user'''
+    rows2 = cur2.execute(stringSQL2)
+
+    for i in rows2:
+        r = {}
+        r['paises'] = i[0]
+
+        data2.append([i[0],""]) #Necesita dos numeros #Ver como poner un contador #CHECAR
+    datos_json2 = dumps(data2)
+
+
+    #Grafica 3
+    h_var3 = 'ID of the level'
+    v_var3 = 'Time of play in minutes'
+    data3 = [[h_var3,v_var3]]
+    # for i in range(0,11):
+    #     data.append([randrange(101),randrange(101)])
+    h_var_json3 = dumps(h_var3)
+    v_var_json3 = dumps(v_var3)
+    # datos_json = dumps(data)
+
+    mydb3 = sqlite3.connect("db.sqlite3")
+    cur3 = mydb3.cursor()
+    stringSQL3 = ''' SELECT Tiempo_jugado, ID_Canciones_id  FROM users_Historial'''
+    rows3 = cur3.execute(stringSQL3)
+    for i in rows3:
+        rr = {}
+        rr['tiempo'] = i[0]
+        rr['id'] = i[1]
+        data3.append([i[1],i[0]]) #Necesita tres numeros
+
+    datos_json3 = dumps(data3)
+    print(datos_json3)#Si pasa bien
+    return render(request,'users/Dashboard.html',{'values':datos_json,'h_title':h_var_json,'v_title':v_var_json
+                                                 ,'values2':datos_json2,'h_title2':h_var_json2,'v_title2':v_var_json2,
+                                                 'values3':datos_json3,'h_title3':h_var_json3,'v_title3':v_var_json3})
