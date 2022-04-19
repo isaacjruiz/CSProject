@@ -330,7 +330,7 @@ def apiss(response):
     final = json.dumps(dict_with_list)
     return HttpResponse(final, content_type="text/users.json")
 
-def dashboard(request): #Tiene una estadistica de prueba
+def dashboard(request): #Ya tiene 3 tablas
     #return HttpResponse(j, content_type="text/json-comment-filtered")
     #Grafica 1
     h_var = 'Points per game'
